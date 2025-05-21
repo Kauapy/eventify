@@ -1,70 +1,59 @@
-# Getting Started with Create React App
+**Um site para visualizar, reservar e gerenciar eventos com sistema de autenticação e controle de ingressos.**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**🔧 Tecnologias Usadas**
 
-## Available Scripts
+✅ **Front-end:** React, Axios, React Router, Tailwind CSS (ou CSS puro).
 
-In the project directory, you can run:
+✅ **Back-end:** Node.js, Express, MongoDB/PostgreSQL, JWT para autenticação.
 
-### `npm start`
+✅ **Extras:** QR Code para validar ingressos, envio de e-mails de confirmação.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**🛠️ Funcionalidades Principais**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+✔️ **Cadastro e login de usuários** → Protegido por senha segura (bcrypt).
 
-### `npm test`
+✔️ **Listagem de eventos** → Com filtros por **data, local e categoria**.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+✔️ **Sistema de reservas** → Com **limite de vagas** por evento.
 
-### `npm run build`
+✔️ **Geração de QR Code** → Para validar entrada no evento.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+✔️ **Painel administrativo** → Criar, editar e excluir eventos.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+✔️ **Autenticação JWT** → Diferenciar **administradores** de **usuários comuns**.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+✔️ **Proteção de dados** → Senhas criptografadas + segurança contra ataques.
 
-### `npm run eject`
+**🔒 Segurança**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+🔹 **Criptografia de senha** com bcrypt.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+🔹 **Proteção contra ataques** SQL Injection e XSS.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+🔹 **Armazenamento seguro de tokens** em HTTP-Only cookies.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+🔹 **HTTPS** para comunicação segura entre usuário e servidor.
 
-## Learn More
+**📡 Implementação**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+🔹 **Front-end:** Consome API via Axios, usa Context API para estado global.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+🔹 **Back-end:** API REST com Express, banco de dados MongoDB/PostgreSQL.
 
-### Code Splitting
+🔹 **Middleware de autenticação** para proteger rotas de administrador.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+🔹 **Armazenamento de usuário e tokens** no localStorage/cookies.
 
-### Analyzing the Bundle Size
+**🔜 Próximos Passos**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1️⃣ **Criar estrutura inicial** do projeto (pasta backend e frontend).
 
-### Making a Progressive Web App
+2️⃣ **Montar a API REST** em Node.js com rotas básicas.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+3️⃣ **Configurar banco de dados** para eventos e usuários.
 
-### Advanced Configuration
+4️⃣ **Criar página de login e sistema de autenticação** JWT.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+5️⃣ **Construir a UI com React + Tailwind CSS**.
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+6️⃣ **Testar e ajustar funcionalidades** antes da implantação.
