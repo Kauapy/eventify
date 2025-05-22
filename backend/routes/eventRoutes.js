@@ -1,8 +1,8 @@
 const express = require('express');
-const Event = require('../models/Event');
+const Event = require('../models/User');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
-const Event = require('../models/Event');
+const User = require('../models/User');
 
 
 

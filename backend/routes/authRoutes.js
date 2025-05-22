@@ -9,6 +9,11 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try{
     const { nome, email, senha } = req.body;
+    const usuarioExistente = await User.findOne({ email });
+    if (usuarioExistente) {
+      return res.status(400).json({ mensagem: "Email já cadastrado!" });
+    }
+
     const senhaHash = await bcrypt.hash(senha, 10);
     const novoUsuario = new User({ nome, email, senha: senhaHash });
     await novoUsuario.save();
@@ -17,7 +22,6 @@ router.post('/register', async (req, res) => {
     res.status(500).json({
       mensagem: "Erro ao registrar usuário",
       error: error.message
-
     })
   }
 });
