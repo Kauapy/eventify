@@ -1,12 +1,35 @@
-h1{
+.titulo{
     color: #FFFFFF;
     margin-left: 4rem;
     font-weight: lighter;
 }
 
 .header{
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    border: 1px solid #FFFFFF;
+    border-radius: 20px;
+    width: 30rem;
+    height: 40rem;
+    margin: 3rem auto;
 }
+
+.titulo{
+    color: #FFFFFF;
+    font-weight: lighter;
+    display: flex;
+    flex-direction: column;
+    margin-left: 2.5rem;
+    padding-top: 1.5rem;
+}
+
+.link{
+    color: #FFFFFF;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: right;
+    justify-content: right;
+    margin-left: 23rem;
+    margin-top: -3.0rem;
+    font-weight: lighter;
+}
+

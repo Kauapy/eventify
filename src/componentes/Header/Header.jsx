@@ -1,11 +1,13 @@
 import React from "react";
 import "./Header.css";
+import { Link } from "react-router-dom";
 
 function Header() {
   return (
-    <div className="header">
-      <h1>Eventify</h1>
-    </div>
+    <header className="header">
+      <h1 className="titulo">Eventify</h1>
+      <Link to="/register" className="link">Registre-se</Link>
+    </header>
   );
 }
 
