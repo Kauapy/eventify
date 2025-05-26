@@ -1,6 +1,8 @@
 import React from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
+import Input from "../Input/Input";
+import Footer from "../FooterLoginPage/Footer";
 
 function Header() {
   return (
@@ -8,7 +10,9 @@ function Header() {
       <h1 className="titulo">Eventify</h1>
       <Link to="/register" className="link">Login</Link>
       <h1 className="login">Entrar</h1>
-    </header>
+      <Input></Input>
+      <Footer></Footer>
+    </header> 
   );
 }
 

@@ -1,6 +1,6 @@
 .header{
     background-color: #141828;
-    border-radius: 20px;
+    border-radius: 12px;
     width: 30rem;
     height: 30rem;
     margin: 12rem auto;
@@ -13,7 +13,6 @@
     margin-left: 2.5rem;
     padding-top: 1.5rem;
     font-size: 1.3rem;
-
     font-weight: 500;
 }
 
@@ -35,5 +34,5 @@
     display: flex;
     flex-direction: column;
     margin-left: 2.5rem;
-    padding-top: 1.5rem;
+    margin-top: 3rem;
 }
