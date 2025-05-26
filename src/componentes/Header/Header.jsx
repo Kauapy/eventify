@@ -6,7 +6,8 @@ function Header() {
   return (
     <header className="header">
       <h1 className="titulo">Eventify</h1>
-      <Link to="/register" className="link">Registre-se</Link>
+      <Link to="/register" className="link">Login</Link>
+      <h1 className="login">Entrar</h1>
     </header>
   );
 }

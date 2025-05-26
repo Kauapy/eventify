@@ -1,24 +1,20 @@
-.titulo{
-    color: #FFFFFF;
-    margin-left: 4rem;
-    font-weight: lighter;
-}
-
 .header{
-    border: 1px solid #FFFFFF;
+    background-color: #141828;
     border-radius: 20px;
     width: 30rem;
-    height: 40rem;
-    margin: 3rem auto;
+    height: 30rem;
+    margin: 12rem auto;
 }
 
 .titulo{
     color: #FFFFFF;
-    font-weight: lighter;
     display: flex;
     flex-direction: column;
     margin-left: 2.5rem;
     padding-top: 1.5rem;
+    font-size: 1.3rem;
+
+    font-weight: 500;
 }
 
 .link{
@@ -28,8 +24,16 @@
     flex-direction: column;
     align-items: right;
     justify-content: right;
-    margin-left: 23rem;
-    margin-top: -3.0rem;
+    margin-left: 24.5rem;
+    margin-top: -2.2rem;
     font-weight: lighter;
 }
 
+
+.login{
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    margin-left: 2.5rem;
+    padding-top: 1.5rem;
+}
