@@ -1,8 +1,9 @@
 import "./App.css";
-import input from "./componentes/Input/Input";
+import Input from "./componentes/Input/Input";
 import Header from "./componentes/Header/Header";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import Home from "./componentes/Home/Home";
+import Register from "./componentes/Register/Register";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
   return (
@@ -10,7 +11,10 @@ function App() {
       <div className="App">
         <Header />
         <Routes>
-          <Route path="/register"/>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Input />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/home" element={<Home />} />
         </Routes>
       </div>
     </BrowserRouter>

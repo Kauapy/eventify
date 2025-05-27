@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './input.css';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -9,13 +10,14 @@ function Input() {
   const [senha, setSenha] = useState("");
   const [erroEmail, setErroEmail] = useState("");
   const [erroSenha, setErroSenha] = useState("");
+  const navigate = useNavigate();
 
   const validarEmail = (email) => emailRegex.test(email);
   const validarSenha = (senha) => senhaRegex.test(senha);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    
     const emailValido = validarEmail(email);
     const senhaValida = validarSenha(senha);
 
@@ -33,6 +35,7 @@ function Input() {
 
     if (emailValido && senhaValida) {
       console.log("Email:", email, "Senha:", senha);
+      navigate('/')
     }
   };
 
@@ -47,9 +50,8 @@ function Input() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-        </div>
-        {erroEmail && <p className="error-text">{erroEmail}</p>}
-        
+        </div>       
+
         <div className='input-container'>
           <input
             type="password"
@@ -58,9 +60,7 @@ function Input() {
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />
-        </div>
-        {erroSenha && <p className="error-text">{erroSenha}</p>}
-        
+        </div>        
         <button type="submit" className="input-button">Enviar</button>
       </form>
     </div>

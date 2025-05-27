@@ -8,7 +8,7 @@ function Header() {
   return (
     <header className="header">
       <h1 className="titulo">Eventify</h1>
-      <Link to="/register" className="link">Login</Link>
+      <p className="link">Login</p>
       <h1 className="login">Entrar</h1>
       <Input></Input>
       <Footer></Footer>
