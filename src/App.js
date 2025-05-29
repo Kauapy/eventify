@@ -9,10 +9,10 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <Header />
+        <Header></Header>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/" element={<Input />} />
+          <Route path="/login" element={<Input />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
         </Routes>
