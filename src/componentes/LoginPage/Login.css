@@ -15,7 +15,7 @@ body {
   color: white;
 }
 
-/* Header */
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -38,7 +38,7 @@ body {
   font-weight: 400;
 }
 
-/* Container principal */
+
 .main-container {
   display: flex;
   justify-content: center;
@@ -47,7 +47,7 @@ body {
   padding: 20px;
 }
 
-/* Caixa do login */
+
 .login-box {
   background-color: #161f2c;
   border-radius: 16px;
@@ -65,7 +65,7 @@ body {
   text-align: left;
 }
 
-/* Container dos inputs */
+
 .input-container {
   margin-bottom: 24px;
 }
@@ -74,7 +74,7 @@ body {
   margin-bottom: 32px;
 }
 
-/* Estilo dos inputs */
+
 .input-field {
   width: 100%;
   padding: 16px 20px;
@@ -97,7 +97,7 @@ body {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-/* Mensagens de erro */
+
 .erro-message {
   color: #ef4444;
   font-size: 14px;
@@ -106,7 +106,7 @@ body {
   font-weight: 500;
 }
 
-/* Botão */
+
 .input-button {
   width: 100%;
   padding: 16px;
@@ -131,7 +131,7 @@ body {
   transform: translateY(0);
 }
 
-/* Links inferiores */
+
 .footer-links {
   display: flex;
   justify-content: space-between;
@@ -147,7 +147,7 @@ body {
   transition: color 0.2s ease;
 }
 
-/* Responsividade */
+
 @media (max-width: 480px) {
   .header {
     padding: 24px 32px 0 32px;

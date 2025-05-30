@@ -17,7 +17,6 @@ console.log("Conteúdo do .env:", envContent);
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
-require('dotenv').config()
 console.log("🔍 MONGO_URL carregada:", process.env.MONGO_URL);
 
 console.log("🔍 MONGO_URL carregada:", process.env.MONGO_URL);
