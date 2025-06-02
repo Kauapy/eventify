@@ -33,9 +33,21 @@ body {
 }
 
 .link {
-  color: #d1d5db;
+  color: #ffffffd2;
   font-size: 16px;
   font-weight: 400;
+  text-decoration: none;
+}
+
+.link:hover{
+  text-decoration: underline;
+}
+
+.link-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 
 
