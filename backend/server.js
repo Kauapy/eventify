@@ -21,7 +21,7 @@ console.log("🔍 MONGO_URL carregada:", process.env.MONGO_URL);
 
 console.log("🔍 MONGO_URL carregada:", process.env.MONGO_URL);
 
-app.use('/auth', authRoutes);;
+app.use('/auth', authRoutes);
 app.use('/events', eventRoutes);
 
 app.get('/', (req, res) => {
