@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css'; 
 import { useNavigate, Link } from 'react-router-dom';
+import Register from '../Register/Register.jsx';
 
 function Login() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -86,7 +87,7 @@ function Login() {
                         </button>
                         <div className='link-container'>
                             <p>Esqueceu a senha?</p>
-                            <Link className='link'>Cadastre-se aqui</Link>
+                            <Link className='link' to="/Register" >Cadastre-se aqui</Link>
                         </div>
                     </form>
                 </div>
