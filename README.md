@@ -44,16 +44,3 @@
 
 🔹 **Armazenamento de usuário e tokens** no localStorage/cookies.
 
-**🔜 Próximos Passos**
-
-1️⃣ **Criar estrutura inicial** do projeto (pasta backend e frontend).
-
-2️⃣ **Montar a API REST** em Node.js com rotas básicas.
-
-3️⃣ **Configurar banco de dados** para eventos e usuários.
-
-4️⃣ **Criar página de login e sistema de autenticação** JWT.
-
-5️⃣ **Construir a UI com React + Tailwind CSS**.
-
-6️⃣ **Testar e ajustar funcionalidades** antes da implantação.
