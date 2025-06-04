@@ -1,12 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+body{
+    font-family: "Inter", sans-serif;
+}
+
 .header-container{
     display: flex;
     flex-direction: row;
 }
 
 .titulo-principal{
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     margin-left: 2rem;
     color: #FFFFFF;
+    font-size: 1.5rem;
 }
 
 .link02{
@@ -36,4 +43,12 @@
 
 .Sign-Out:hover{
     text-decoration: underline;
+}
+
+
+.titulo-secundario{
+    margin-top: 4rem;
+    margin-left: 2rem;
+    color: #FFFFFF;
+
 }
