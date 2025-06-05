@@ -18,7 +18,7 @@ function Home() {
     const dataEvento = new Date(evento.data);
     const hoje = new Date();
 
-    if (filtroData === "futuro" && dataEvento > hoje) return false;
+    if (filtroData === "próximos" && dataEvento > hoje) return false;
     if (
       filtroData === "hoje" &&
       dataEvento.toDateString() !== hoje.toDateString()
@@ -44,18 +44,26 @@ function Home() {
         </Link>
       </header>
       <h1 className="titulo-secundario">Home</h1>
-      <select onChange={(e) => setFiltroData(e.target.value)}>
-        <option value="futuro">Eventos Futuros</option>
-        <option value="hoje">Eventos Hoje</option>
-        <option value="passado">Eventos Passados</option>
-      </select>
-
-      <select onChange={(e) => setFiltroCategoria(e.target.value)}>
-        <option value="">Todas as Categorias</option>
-        <option value="musica">Música</option>
-        <option value="tecnologia">Tecnologia</option>
-        <option value="esportes">Esportes</option>
-      </select>
+      <div className="select-container">
+        <select
+          className="select"
+          onChange={(e) => setFiltroData(e.target.value)}
+        >
+          <option value="">Filtrar por data</option>
+          <option value="futuro">Futuro</option>
+          <option value="hoje">Presente</option>
+          <option value="passado">Passado</option>
+        </select>
+        <select
+          className="select"
+          onChange={(e) => setFiltroCategoria(e.target.value)}
+        >
+          <option value="">Categorias</option>
+          <option value="musica">Música</option>
+          <option value="tecnologia">Tecnologia</option>
+          <option value="esportes">Esportes</option>
+        </select>
+      </div>
 
       {eventosFiltrados.map((evento) => (
         <div key={evento.id}>

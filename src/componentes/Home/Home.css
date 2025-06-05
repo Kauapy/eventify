@@ -50,5 +50,29 @@ body{
     margin-top: 4rem;
     margin-left: 2rem;
     color: #FFFFFF;
+}
 
+.select{
+  background-color: #18182b;
+  color: #d1d1d1;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-width: 120px;
+  outline: none;
+}
+
+.select-container{
+    display: flex;
+    flex-direction: row;
+    margin-left: 2rem;
+    margin-top: 1.5rem;
+    gap: 10px;
 }
