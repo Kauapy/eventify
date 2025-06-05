@@ -8,6 +8,7 @@ const fs = require('fs');
 const authRoutes = require('./routes/authRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const envContent = fs.readFileSync(path.join(__dirname, '.env')).toString();
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 app.use(cors());
@@ -23,6 +24,7 @@ console.log("🔍 MONGO_URL carregada:", process.env.MONGO_URL);
 
 app.use('/auth', authRoutes);
 app.use('/events', eventRoutes);
+app.use('/admin', adminRoutes)
 
 app.get('/', (req, res) => {
   res.send("🚀 API funcionando!");
