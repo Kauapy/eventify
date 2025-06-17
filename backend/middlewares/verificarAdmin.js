@@ -4,3 +4,5 @@ const verificarAdmin = (req, res, next) => {
   }
   next();
 };
+
+module.exports = verificarAdmin;
