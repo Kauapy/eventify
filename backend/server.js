@@ -24,7 +24,7 @@ console.log("🔍 MONGO_URL carregada:", process.env.MONGO_URL);
 
 app.use('/auth', authRoutes);
 app.use('/events', eventRoutes);
-app.use('/admin', adminRoutes)
+app.use('/admin', adminRoutes);
 
 app.get('/', (req, res) => {
   res.send("🚀 API funcionando!");
