@@ -3,11 +3,18 @@ import "./Home.css";
 import { Link } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import { useState } from "react";
+import AdminDashboard from "./AdminDashboard";
 function Home() {
   const handleSignOut = () => {
     localStorage.removeItem("token");
     Navigate("/login");
   };
+
+  function ProtectedRoute({ children}){
+    const userRole = localStorage.getItem("role");
+    return userRole === "admin" ? children : <Navigate to="/"></Navigate>
+  }
+
 
   const [filtroData, setFiltroData] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("");
@@ -38,6 +45,7 @@ function Home() {
         <div className="links-container">
           <Link className="link02">Home</Link>
           <Link className="link02">Events</Link>
+          <Route path="/admin" element={<ProtectedRoute> <AdminDashBoard></AdminDashBoard></ProtectedRoute>}></Route>
         </div>
         <Link onClick={handleSignOut} className="Sign-Out">
           Sign out
