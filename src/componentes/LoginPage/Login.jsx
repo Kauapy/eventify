@@ -29,7 +29,7 @@ function Login() {
         if (!emailValido || !senhaValida) return;
 
         try {
-            const response = await fetch('http://localhost:3000/login', {
+            const response = await fetch('http://localhost:3000/auth/login', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -42,6 +42,7 @@ function Login() {
             if (data.token) {
                 localStorage.setItem("token", data.token);
                 console.log("Login Sucedido");
+                console.log("Redirecionando para /home");
                 navigate("/home");
             } else {
                 console.error("Erro no login:", data.message);

@@ -1,24 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Home.css";
-import { Link } from "react-router-dom";
-import { Navigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import AdminDashboard from "./AdminDashboard";
+
 function Home() {
+  const navigate = useNavigate();
+
   const handleSignOut = () => {
     localStorage.removeItem("token");
-    Navigate("/login");
+    navigate("/login");
   };
-
-  function ProtectedRoute({ children}){
-    const userRole = localStorage.getItem("role");
-    return userRole === "admin" ? children : <Navigate to="/"></Navigate>
-  }
-
 
   const [filtroData, setFiltroData] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("");
-
   const [eventos, setEventos] = useState([]);
 
   const eventosFiltrados = eventos.filter((evento) => {
@@ -32,7 +26,6 @@ function Home() {
     )
       return false;
     if (filtroData === "passado" && dataEvento < hoje) return false;
-
     if (filtroCategoria && evento.categoria !== filtroCategoria) return false;
 
     return true;
@@ -43,14 +36,17 @@ function Home() {
       <header className="header-container">
         <h1 className="titulo-principal">Eventify</h1>
         <div className="links-container">
-          <Link className="link02">Home</Link>
-          <Link className="link02">Events</Link>
-          <Route path="/admin" element={<ProtectedRoute> <AdminDashBoard></AdminDashBoard></ProtectedRoute>}></Route>
+          <Link className="link02" to="/">Home</Link>
+          <Link className="link02" to="/events">Events</Link>
+          {localStorage.getItem("role") === "admin" && (
+            <Link className="link02" to="/admin">Painel Admin</Link>
+          )}
         </div>
         <Link onClick={handleSignOut} className="Sign-Out">
           Sign out
         </Link>
       </header>
+
       <h1 className="titulo-secundario">Home</h1>
       <div className="select-container">
         <select
@@ -62,6 +58,7 @@ function Home() {
           <option value="hoje">Presente</option>
           <option value="passado">Passado</option>
         </select>
+
         <select
           className="select"
           onChange={(e) => setFiltroCategoria(e.target.value)}
