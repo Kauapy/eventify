@@ -11,6 +11,17 @@ router.post('/register', async (req, res) => {
   try{
     const { nome, email, senha } = req.body;
 
+    console.log("📌 ADMIN_EMAIL do .env:", process.env.ADMIN_EMAIL);
+console.log("📨 E-mail usado no cadastro:", email);
+
+const role2 =
+      email.trim().toLowerCase() === process.env.ADMIN_EMAIL.trim().toLowerCase()
+        ? "admin"
+        : "user";
+
+    console.log("🔍 Role atribuída:", role2);
+
+
     const usuarioExistente = await User.findOne({ email });
 
     if (usuarioExistente) {
