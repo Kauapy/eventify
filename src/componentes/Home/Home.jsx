@@ -36,10 +36,16 @@ function Home() {
       <header className="header-container">
         <h1 className="titulo-principal">Eventify</h1>
         <div className="links-container">
-          <Link className="link02" to="/">Home</Link>
-          <Link className="link02" to="/events">Events</Link>
+          <Link className="link02" to="/">
+            Home
+          </Link>
+          <Link className="link02" to="/events">
+            Events
+          </Link>
           {localStorage.getItem("role") === "admin" && (
-            <Link className="link02" to="/admin">Painel Admin</Link>
+            <Link className="link02" to="/admin">
+              Painel Admin
+            </Link>
           )}
         </div>
         <Link onClick={handleSignOut} className="Sign-Out">

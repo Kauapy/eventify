@@ -10,14 +10,21 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try{
     const { nome, email, senha } = req.body;
+
     const usuarioExistente = await User.findOne({ email });
+
     if (usuarioExistente) {
       return res.status(400).json({ mensagem: "Email já cadastrado!" });
     }
 
     const senhaHash = await bcrypt.hash(senha, 10);
+
+    const role = email === process.env.ADMIN_EMAIL ? "admin" : "user";
+    
     const novoUsuario = new User({ nome, email, senha: senhaHash });
+
     await novoUsuario.save();
+
     res.json({ mensagem: "Usuário registrado com sucesso!" });
   }catch (error){
     res.status(500).json({
@@ -41,6 +48,8 @@ router.post('/login', async  (req, res) => {
     if (!senhaCorreta) {
       return res.status(401).json({ mensagem: "Senha incorreta!" });
     }
+    
+    console.log(`Usuário logado: ${usuario.email} | Role: ${usuario.role}`);
 
     const token = jwt.sign(
       { id: usuario._id, role: usuario.role },
@@ -48,7 +57,7 @@ router.post('/login', async  (req, res) => {
       { expiresIn: "1h" }
     );
 
-    return res.json({ token });
+    return res.json({ token, role: usuario.role });
   } catch (error) {
     console.error("Erro no login:", error);
     return res.status(500).json({ mensagem: "Erro interno do servidor" });
