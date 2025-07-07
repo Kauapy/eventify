@@ -68,7 +68,9 @@ router.post('/login', async  (req, res) => {
       { expiresIn: "1h" }
     );
 
-    return res.json({ token, role: usuario.role });
+    console.log(`🟢 Usuário logado: ${usuario.email} | Role: ${usuario.role}`);
+    res.json({ token, role: usuario.role});
+
   } catch (error) {
     console.error("Erro no login:", error);
     return res.status(500).json({ mensagem: "Erro interno do servidor" });

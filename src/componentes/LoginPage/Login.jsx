@@ -41,6 +41,7 @@ function Login() {
 
             if (data.token) {
                 localStorage.setItem("token", data.token);
+                localStorage.setItem("role", data.role);
                 console.log("Login Sucedido");
                 console.log("Redirecionando para /home");
                 navigate("/home");

@@ -43,7 +43,7 @@ function Home() {
             Events
           </Link>
           {localStorage.getItem("role") === "admin" && (
-            <Link className="link02" to="/admin">
+            <Link to="/admin" className="link02">
               Painel Admin
             </Link>
           )}
