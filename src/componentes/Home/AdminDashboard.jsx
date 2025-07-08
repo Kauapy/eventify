@@ -23,7 +23,8 @@ function AdminDashboard() {
     }
   return (
     <div>
-        <h2>Painel do Administrador</h2>
+        <h2 className='titulo-admin'>Adminfy</h2>
+        <h2 className='subtitulo-admin'>Events</h2>
     </div>
   )
 }

@@ -1,9 +1,9 @@
+const path = require('path');
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const path = require('path');
 const fs = require('fs');
 
 const app = express();
@@ -50,7 +50,9 @@ mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("✅ Banco de Dados conectado!"))
   .catch(err => console.error("❌ Erro ao conectar ao MongoDB:", err));
 
+
 app.listen(3000, () => {
   console.log("🚀 Servidor rodando na porta 3000!");
   console.log("🔍 Teste em: http://localhost:3000/test");
 });
+
