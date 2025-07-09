@@ -41,6 +41,20 @@ app.get('/test', (req, res) => {
   res.json({ mensagem: "Servidor funcionando!", timestamp: new Date() });
 });
 
+if (process.env.NODE_ENV === "production") {
+  app.use(
+    express.static(path.join(__dirname, "..", "src", "build"))
+  );
+
+  app.get("*", (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, "..", "src", "build", "index.html")
+    );
+  });
+}
+
+
+
 app.use((req, res) => {
   console.log(`❌ Rota não encontrada: ${req.method} ${req.url}`);
   res.status(404).json({ erro: "Rota não encontrada" });

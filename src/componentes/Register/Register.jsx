@@ -18,7 +18,7 @@ function Register() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/auth/register", {
+      const response = await fetch("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nome, email, senha }),
@@ -27,7 +27,7 @@ function Register() {
       const data = await response.json();
 
       if (data.mensagem === "Usuário registrado com sucesso!") {
-        const loginResponse = await fetch("http://localhost:3000/auth/login", {
+        const loginResponse = await fetch("/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, senha }),
