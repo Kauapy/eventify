@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "./AdminDashboard.css";
 
+
 function AdminDashboard() {
+
+    const [showModal, setShowModal] = useState(false)
 
     const handleCreateEvent = async () =>{
         const response = await fetch("http://localhost:3000/admin/events", {
@@ -25,6 +28,10 @@ function AdminDashboard() {
     <div>
         <h2 className='titulo-admin'>Adminfy</h2>
         <h2 className='subtitulo-admin'>Events</h2>
+
+        <div>
+            <button type='button' onClick={() => setShowModal(true)}>Novo Evento</button>
+        </div>
     </div>
   )
 }

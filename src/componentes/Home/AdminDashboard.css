@@ -1,10 +1,14 @@
 .titulo-admin{
     color: white;
-    margin-left: 2rem;
+    margin-left: 2.4rem;
     margin-top: 1rem;
+    font-size: large;
+    font-weight: normal;
 }
 
 .subtitulo-admin{
     color: white;
-    margin-left: 2rem;
+    margin-left: 2.2rem;
+    margin-top: 5rem;
+    font-weight: bold;
 }
