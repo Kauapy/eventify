@@ -1,29 +1,11 @@
 import React, { useState } from 'react'
 import "./AdminDashboard.css";
-
+import EventModal from "./EventModal";
 
 function AdminDashboard() {
 
     const [showModal, setShowModal] = useState(false)
 
-    const handleCreateEvent = async () =>{
-        const response = await fetch("http://localhost:3000/admin/events", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            },
-            body: JSON.stringify({
-                nome: "Evento de Teste",
-                data: "21/10/2025",
-                categoria: "Tecnologia",
-                descricao: "Festa comemorativa da nova empresa de tecnologia chamada Eventify"
-            })
-        })
-
-        const data = await response.json()
-        console.log(data);
-    }
   return (
     <div>
         <h2 className='titulo-admin'>Adminfy</h2>
@@ -32,6 +14,8 @@ function AdminDashboard() {
         <div>
             <button type='button' onClick={() => setShowModal(true)}>Novo Evento</button>
         </div>
+
+        <EventModal visible={showModal} onClose={() => setShowModal(false)} />
     </div>
   )
 }
