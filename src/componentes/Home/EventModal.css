@@ -1,34 +1,106 @@
+/* 🔲 Fundo escuro quando o modal está aberto */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.4);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 
+/* 📦 Caixa branca central do modal */
 .modal-content {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 6px;
-  width: 400px;
-  max-width: 90%;
+  background-color: #fff;
+  padding: 32px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.modal-content h2 {
-  margin-top: 0;
+/* 🎞️ Animação suave */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.modal-content label {
-  display: block;
-  margin: 0.75rem 0;
+/* 🏷️ Título */
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  text-align: center;
 }
 
+/* 🧾 Formulário */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 🏷️ Labels */
+.modal-label {
+  margin-bottom: 12px;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+/* ✏️ Inputs, Select, Textarea */
+.modal-input,
+.modal-select,
+.modal-textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-top: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* 🎯 Botões */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.modal-button.save {
+  background-color: #28a745;
+  color: white;
+}
+
+.modal-button.save:hover {
+  background-color: #218838;
+}
+
+.modal-button.cancel {
+  background-color: #ddd;
+  color: #333;
+}
+
+.modal-button.cancel:hover {
+  background-color: #bbb;
 }

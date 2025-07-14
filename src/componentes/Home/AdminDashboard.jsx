@@ -6,6 +6,10 @@ function AdminDashboard() {
 
     const [showModal, setShowModal] = useState(false)
 
+    function AdminDashboard({ adicionarEvento }) {
+      
+    }
+
   return (
     <div>
         <h2 className='titulo-admin'>Adminfy</h2>

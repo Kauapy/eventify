@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Home.css";
 import { Link, useNavigate, navigate } from "react-router-dom";
 import AdminDashboard from "./AdminDashboard";
+import axios from "axios";
 
 function Home() {
   const navigate = useNavigate();
@@ -14,6 +15,22 @@ function Home() {
   const [filtroData, setFiltroData] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("");
   const [eventos, setEventos] = useState([]);
+
+    const adicionarEvento = (novoEvento) => {
+      setEventos((prevEventos) => [...prevEventos, novoEvento]);
+    }
+
+  
+
+  useEffect(() => {
+  axios.get("/events")
+    .then((res) => {
+      setEventos(res.data);
+    })
+    .catch((err) => {
+      console.error("Erro ao buscar eventos:", err);
+    });
+}, []);
 
   const eventosFiltrados = eventos.filter((evento) => {
     const dataEvento = new Date(evento.data);
@@ -31,6 +48,8 @@ function Home() {
     return true;
   });
 
+  
+
   return (
     <div>
       <header className="header-container">
@@ -45,6 +64,7 @@ function Home() {
           {localStorage.getItem("role") === "admin" && (
             <Link to="/admin" className="link02">
               Painel Admin
+              <AdminDashboard adicionarEvento={adicionarEvento}></AdminDashboard>
             </Link>
           )}
         </div>
@@ -76,11 +96,11 @@ function Home() {
         </select>
       </div>
 
-      {eventosFiltrados.map((evento) => (
-        <div key={evento.id}>
-          <h3>{evento.nome}</h3>
-          <p>Data: {evento.data}</p>
-          <p>Categoria: {evento.categoria}</p>
+      {eventos.map((evento) => (
+        <div key={evento.id || evento.nome } className="evento-card">
+          <h3 className="evento-titulo">{evento.nome}</h3>
+          <p className="evento-data">Data: {evento.data}</p>
+          <p className="evento-descricao">Categoria: {evento.categoria}</p>
         </div>
       ))}
     </div>

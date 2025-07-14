@@ -76,3 +76,31 @@ body{
     margin-top: 1.5rem;
     gap: 10px;
 }
+
+.evento-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.evento-titulo {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.evento-data {
+  color: #555;
+  font-style: italic;
+}
+
+.evento-categoria {
+  color: #007BFF;
+  font-weight: 600;
+}
+
+.evento-descricao {
+  margin-top: 10px;
+}
