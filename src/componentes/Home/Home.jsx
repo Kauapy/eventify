@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";              
 import "./Home.css";
-import { Link, useNavigate, navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; 
 import AdminDashboard from "./AdminDashboard";
-import axios from "axios";
 
-function Home() {
+function Home({ eventos, adicionarEvento }) {        
   const navigate = useNavigate();
 
   const handleSignOut = () => {
@@ -14,63 +13,43 @@ function Home() {
 
   const [filtroData, setFiltroData] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("");
-  const [eventos, setEventos] = useState([]);
 
-    const adicionarEvento = (novoEvento) => {
-      setEventos((prevEventos) => [...prevEventos, novoEvento]);
-    }
-
-  
-
-  useEffect(() => {
-  axios.get("/events")
-    .then((res) => {
-      setEventos(res.data);
-    })
-    .catch((err) => {
-      console.error("Erro ao buscar eventos:", err);
-    });
-}, []);
-
+  // mapeia e filtra o array que chega por props
   const eventosFiltrados = eventos.filter((evento) => {
     const dataEvento = new Date(evento.data);
     const hoje = new Date();
 
-    if (filtroData === "próximos" && dataEvento > hoje) return false;
+    if (filtroData === "futuro" && dataEvento < hoje) return false;
     if (
       filtroData === "hoje" &&
       dataEvento.toDateString() !== hoje.toDateString()
     )
       return false;
-    if (filtroData === "passado" && dataEvento < hoje) return false;
-    if (filtroCategoria && evento.categoria !== filtroCategoria) return false;
+    if (filtroData === "passado" && dataEvento > hoje) return false;
+    if (filtroCategoria && evento.categoria !== filtroCategoria)
+      return false;
 
     return true;
   });
-
-  
 
   return (
     <div>
       <header className="header-container">
         <h1 className="titulo-principal">Eventify</h1>
         <div className="links-container">
-          <Link className="link02" to="/">
+          <Link className="link02" to="/home">
             Home
           </Link>
           <Link className="link02" to="/events">
             Events
           </Link>
           {localStorage.getItem("role") === "admin" && (
-            <Link to="/admin" className="link02">
-              Painel Admin
-              <AdminDashboard adicionarEvento={adicionarEvento}></AdminDashboard>
-            </Link>
+            <AdminDashboard adicionarEvento={adicionarEvento} />
           )}
         </div>
-        <Link onClick={handleSignOut} className="Sign-Out">
+        <button onClick={handleSignOut} className="Sign-Out">
           Sign out
-        </Link>
+        </button>
       </header>
 
       <h1 className="titulo-secundario">Home</h1>
@@ -96,11 +75,12 @@ function Home() {
         </select>
       </div>
 
-      {eventos.map((evento) => (
-        <div key={evento.id || evento.nome } className="evento-card">
+      {eventosFiltrados.map((evento) => (
+        <div key={evento.id || evento.nome} className="evento-card">
           <h3 className="evento-titulo">{evento.nome}</h3>
           <p className="evento-data">Data: {evento.data}</p>
-          <p className="evento-descricao">Categoria: {evento.categoria}</p>
+          <p className="evento-categoria">Categoria: {evento.categoria}</p>
+          <p className="evento-descricao">{evento.descricao}</p>
         </div>
       ))}
     </div>

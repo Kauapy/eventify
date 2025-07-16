@@ -1,27 +1,28 @@
-import React, { useState } from 'react'
-import "./AdminDashboard.css";
+import React, { useState } from "react";
 import EventModal from "./EventModal";
 
-function AdminDashboard() {
 
-    const [showModal, setShowModal] = useState(false)
-
-    function AdminDashboard({ adicionarEvento }) {
-      
-    }
+function AdminDashboard({ adicionarEvento }) {
+  const [modalVisivel, setModalVisivel] = useState(false);
 
   return (
     <div>
-        <h2 className='titulo-admin'>Adminfy</h2>
-        <h2 className='subtitulo-admin'>Events</h2>
 
-        <div>
-            <button type='button' onClick={() => setShowModal(true)}>Novo Evento</button>
-        </div>
+    <h2 className="titulo-admin">AdminFy</h2>
 
-        <EventModal visible={showModal} onClose={() => setShowModal(false)} />
+    <h2 className="subtitulo-admin">Events</h2>
+
+      <button onClick={() => setModalVisivel(true)}>
+        Criar Novo Evento
+      </button>
+
+      <EventModal
+        visible={modalVisivel}
+        onClose={() => setModalVisivel(false)}
+        adicionarEvento={adicionarEvento}
+      />
     </div>
-  )
+  );
 }
 
-export default AdminDashboard
+export default AdminDashboard;

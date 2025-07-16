@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./EventModal.css";
 import axios from "axios";
+import { type } from "@testing-library/user-event/dist/type";
 
 function EventModal({ visible, onClose, adicionarEvento }) {
+
   const token = localStorage.getItem("token");
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
@@ -12,33 +14,32 @@ function EventModal({ visible, onClose, adicionarEvento }) {
   if (!visible) return null;
 
   function handleSave(e) {
-    e.preventDefault();
-    axios
-      .post(
-        "/events",
-        { nome: title, data: date, categoria, descricao },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then(() => {
-        alert("Evento criado com sucesso!");
-        onClose();
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Erro ao criar evento.");
+  e.preventDefault();             
+  axios
+    .post(
+      "/events",
+      { nome: title, data: date, categoria, descricao },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    .then(() => {
+
+      console.log("adicionarEvento é:", typeof adicionarEvento);
+
+      adicionarEvento({
+        nome: title,
+        data: date,
+        categoria,
+        descricao,
       });
 
-    adicionarEvento({
-      nome: title,
-      data: date,
-      categoria,
-      descricao,
+      onClose();
+    })
+    .catch((err) => {
+      console.error("Erro ao criar evento:", err);
+      alert("Não conseguiu criar o evento");
     });
-  }
+}
+
 
   return (
     <div className="modal-overlay">
