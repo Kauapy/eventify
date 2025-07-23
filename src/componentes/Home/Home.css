@@ -104,3 +104,14 @@ body{
 .evento-descricao {
   margin-top: 10px;
 }
+
+.btn-excluir {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.btn-excluir:hover {
+  color: darkred;
+}

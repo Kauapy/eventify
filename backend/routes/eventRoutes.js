@@ -41,4 +41,23 @@ router.get("/", async (req, res) => {
   }
 });
 
+
+router.delete("/:id", authMiddleware, async (req, res) => {
+  if(req.user.role !== "admin") {
+    return res.status(403).json({
+      mensagem: "Acesso negado. Você não tem permissão para deletar eventos."
+    })
+  }
+
+  try{
+    await Event.findByIdAndDelete(req.params.id)
+    return res.status(204).send();
+  } catch (err){
+    return res.status(500).json({
+      mensagem: "Erro ao deletar evento",
+      error: err.message
+    })
+  }
+})
+
 module.exports = router;

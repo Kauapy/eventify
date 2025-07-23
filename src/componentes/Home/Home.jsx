@@ -1,9 +1,11 @@
-import React, { useState } from "react";              
+import React, { useState } from "react";
 import "./Home.css";
-import { Link, useNavigate } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom";
 import AdminDashboard from "./AdminDashboard";
+import axios from "axios";
+import { useEffect } from "react";
 
-function Home({ eventos, adicionarEvento }) {        
+function Home({ eventos, adicionarEvento }) {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
@@ -13,8 +15,18 @@ function Home({ eventos, adicionarEvento }) {
 
   const [filtroData, setFiltroData] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("");
-  
-  const eventosFiltrados = eventos.filter((evento) => {
+  const [eventosState, setEventos] = useState(eventos || []);
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+  axios
+    .get("http://localhost:3001/events")
+    .then(res => setEventos(res.data))
+    .catch(err => console.error(err));
+}, []);
+
+
+  const eventosFiltrados = eventosState.filter((evento) => {
     const dataEvento = new Date(evento.data);
     const hoje = new Date();
 
@@ -25,11 +37,29 @@ function Home({ eventos, adicionarEvento }) {
     )
       return false;
     if (filtroData === "passado" && dataEvento > hoje) return false;
-    if (filtroCategoria && evento.categoria !== filtroCategoria)
-      return false;
+    if (filtroCategoria && evento.categoria !== filtroCategoria) return false;
 
     return true;
   });
+
+  function excluirEvento(id) {
+    if (!id) {
+      console.warn("ID inválido:", id);
+      return;
+    }
+    axios
+      .delete(`http://localhost:3001/events/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+
+      .then(() => {
+        setEventos((prev) => prev.filter((evento) => evento._id !== id));
+      })
+
+      .catch((err) => {
+        console.error("Erro ao excluir evento:", err);
+      });
+  }
 
   return (
     <div>
@@ -82,6 +112,14 @@ function Home({ eventos, adicionarEvento }) {
           <p className="evento-data">Data: {evento.data}</p>
           <p className="evento-categoria">Categoria: {evento.categoria}</p>
           <p className="evento-descricao">{evento.descricao}</p>
+          {user?.role === "admin" && (
+            <button
+              onClick={() => excluirEvento(evento._id)}
+              className="btn-excluir"
+            >
+              ❌
+            </button>
+          )}
         </div>
       ))}
     </div>

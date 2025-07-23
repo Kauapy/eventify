@@ -26,6 +26,7 @@ function AdminDashboard({ adicionarEvento }) {
       <Link to={"/home"} className="link02">
         Voltar para home
       </Link>
+
     </div>
 
     
