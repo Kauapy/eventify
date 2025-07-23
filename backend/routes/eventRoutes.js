@@ -1,33 +1,44 @@
-const express = require('express');
-const Event = require('../models/Event');
+const express = require("express");
 const router = express.Router();
-const authMiddleware = require('../middlewares/authMiddleware');
+const Event = require("../models/Event");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 
 
-router.post('/', authMiddleware, async (req, res) => {
-  if(req.user.role !== 'admin'){
-    return res.status(403).json({ 
+
+router.post("/", authMiddleware, async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({
       mensagem: "Acesso negado. Você não tem permissão para criar eventos."
-    }
-  )
-    try{
-      const { nome, data, local, descricao, vagas} = req.body
-      const novoEvento = new Event({ nome, data, local, descricao, vagas})
-      await novoEvento.save()
-      res.json({ mensagem: "Evento Criado com sucesso!"})
-    } catch (error){
-      res.status(500).json({
-        mensagem: "Erro ao criar evento",
-        error: error.message
-      })
-    }
-}})
+    });
+  }
 
+  try {
 
-router.get('/', async (req, res) => {
-  const eventos = await Event.find();
-  res.json(eventos);
+    const { nome, data, categoria, descricao } = req.body;
+
+    const novoEvento = new Event({ nome, data, categoria, descricao });
+    await novoEvento.save();
+
+    return res.status(201).json(novoEvento);
+  } catch (error) {
+    return res.status(500).json({
+      mensagem: "Erro ao criar evento",
+      error: error.message
+    });
+  }
+});
+
+router.get("/", async (req, res) => {
+  try {
+    const eventos = await Event.find();  
+    return res.json(eventos);
+  } catch (error) {
+    return res.status(500).json({
+      mensagem: "Erro ao buscar eventos",
+      error: error.message
+    });
+  }
 });
 
 module.exports = router;
