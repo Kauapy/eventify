@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import EventModal from "./EventModal";
+import { Link } from "react-router-dom";
 
 
 function AdminDashboard({ adicionarEvento }) {
@@ -21,7 +22,13 @@ function AdminDashboard({ adicionarEvento }) {
         onClose={() => setModalVisivel(false)}
         adicionarEvento={adicionarEvento}
       />
+
+      <Link to={"/home"} className="link02">
+        Voltar para home
+      </Link>
     </div>
+
+    
   );
 }
 

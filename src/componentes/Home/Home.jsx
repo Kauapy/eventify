@@ -13,8 +13,7 @@ function Home({ eventos, adicionarEvento }) {
 
   const [filtroData, setFiltroData] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("");
-
-  // mapeia e filtra o array que chega por props
+  
   const eventosFiltrados = eventos.filter((evento) => {
     const dataEvento = new Date(evento.data);
     const hoje = new Date();
@@ -44,7 +43,9 @@ function Home({ eventos, adicionarEvento }) {
             Events
           </Link>
           {localStorage.getItem("role") === "admin" && (
-            <AdminDashboard adicionarEvento={adicionarEvento} />
+            <Link className="link02" to="/admin">
+              Admin Dashboard
+            </Link>
           )}
         </div>
         <button onClick={handleSignOut} className="Sign-Out">

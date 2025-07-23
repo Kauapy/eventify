@@ -40,6 +40,8 @@ function EventModal({ visible, onClose, adicionarEvento }) {
     });
 }
 
+if(!visible) return null;
+
 
   return (
     <div className="modal-overlay">
