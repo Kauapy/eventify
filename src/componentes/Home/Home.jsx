@@ -78,9 +78,9 @@ function Home({ eventos, adicionarEvento }) {
             </Link>
           )}
         </div>
-        <button onClick={handleSignOut} className="Sign-Out">
-          Sign out
-        </button>
+          <button onClick={handleSignOut} className="Sign-Out">
+            Sign out
+          </button>
       </header>
 
       <h1 className="titulo-secundario">Home</h1>

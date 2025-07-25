@@ -33,17 +33,28 @@ body{
 }
 
 .Sign-Out{
-    display: flex;
-    margin-left: auto;
-    margin-right: 3rem;
-    margin-top: 2rem;
-    color: #FFFFFF;
-    text-decoration: none;
+  position: absolute;
+  right: 2rem;
+  top: 1rem;
+  background-color: #18182b;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  min-width: 100px;
+  height: 50px;
+  outline: none;
 }
 
 .Sign-Out:hover{
-    text-decoration: underline;
+    background-color: #24243a;
+    transition: 0.3s;
 }
+
 
 
 .titulo-secundario{
