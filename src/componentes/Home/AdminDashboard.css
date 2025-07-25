@@ -1,7 +1,7 @@
 .titulo-admin{
     color: white;
     margin-left: 2.4rem;
-    margin-top: 1rem;
+    margin-top: 2rem;
     font-size: large;
     font-weight: normal;
 }
@@ -11,4 +11,39 @@
     margin-left: 2.2rem;
     margin-top: 5rem;
     font-weight: bold;
+}
+
+.new-event{
+  background-color: #18182b;
+  color: #d1d1d1;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-width: 120px;
+  outline: none;
+}
+
+.event-container{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 2.4rem;
+    margin-top: -1.3rem;
+}
+
+.back-home{
+    color: #FFFFFF;
+    text-decoration: none;
+    margin-top: -8rem;
+    float: right;
+    margin-right: 2rem;
+}
+.back-home:hover{
+    text-decoration: underline;
 }
