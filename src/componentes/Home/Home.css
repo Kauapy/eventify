@@ -7,6 +7,7 @@ body{
 .header-container{
     display: flex;
     flex-direction: row;
+    
 }
 
 .titulo-principal{
@@ -55,8 +56,6 @@ body{
     transition: 0.3s;
 }
 
-
-
 .titulo-secundario{
     margin-top: 4rem;
     margin-left: 2rem;
@@ -89,7 +88,7 @@ body{
 }
 
 .evento-card {
-  background-color: #fff;
+  background-color: #ffffffe8;
   border-radius: 12px;
   padding: 20px;
   margin: 15px;
@@ -125,4 +124,45 @@ body{
 }
 .btn-excluir:hover {
   color: darkred;
+}
+
+
+
+@media (max-width: 768px) {
+  .titulo-principal {
+    margin-left: 1rem;
+    font-size: 1.25rem;
+  }
+  .links-container {
+    gap: 1rem;
+  }
+  .select-container {
+    padding: 1rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .Sign-Out {
+    width: 5%;
+    float: right;
+  }
+  .select, .btn-excluir {
+    width: 100%;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+  .evento-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+  .titulo-secundario{
+    margin-left: 1rem;
+    font-size: 1.5rem;
+  }
 }

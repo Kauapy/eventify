@@ -47,3 +47,30 @@
 .back-home:hover{
     text-decoration: underline;
 }
+
+
+@media screen and (max-width: 768px) {
+  .titulo-admin, .subtitulo-admin {
+    margin-left: 1rem;
+    font-size: medium;
+  }
+  .subtitulo-admin{
+    text-align: center;
+  }
+  .titulo-admin{
+    margin-left: 1rem;
+  }
+  .new-event {
+    width: 50%;
+    margin-top: 8rem;
+  }
+  .event-container {
+    justify-content: center;
+    margin-right: 0;
+  }
+  .back-home {
+    margin-top: -16.6rem;
+    margin-right: 1rem;
+  }
+    
+}

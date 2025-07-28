@@ -82,8 +82,10 @@ if(!visible) return null;
             >
               <option value="Geral">Geral</option>
               <option value="Tecnologia">Tecnologia</option>
-              <option value="Negócios">Negócios</option>
+              <option value="Negócios">Esportes</option>
               <option value="Educação">Educação</option>
+              <option value="arte">Arte</option>
+              <option value="Música">Música</option>
             </select>
           </label>
 

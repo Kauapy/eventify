@@ -18,13 +18,19 @@ function Home({ eventos, adicionarEvento }) {
   const [eventosState, setEventos] = useState(eventos || []);
   const user = JSON.parse(localStorage.getItem("user"));
 
-  useEffect(() => {
-  axios
-    .get("http://localhost:3001/events")
-    .then(res => setEventos(res.data))
-    .catch(err => console.error(err));
-}, []);
+  const normalize = (str = "") =>
+    str
+      .trim()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/events")
+      .then((res) => setEventos(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
   const eventosFiltrados = eventosState.filter((evento) => {
     const dataEvento = new Date(evento.data);
@@ -37,7 +43,13 @@ function Home({ eventos, adicionarEvento }) {
     )
       return false;
     if (filtroData === "passado" && dataEvento > hoje) return false;
-    if (filtroCategoria && evento.categoria !== filtroCategoria) return false;
+
+    if (
+      filtroCategoria &&
+      !normalize(evento.categoria).includes(normalize(filtroCategoria))
+    ) {
+      return false;
+    }
 
     return true;
   });
@@ -69,24 +81,22 @@ function Home({ eventos, adicionarEvento }) {
           <Link className="link02" to="/home">
             Home
           </Link>
-          <Link className="link02" to="/events">
-            Events
-          </Link>
           {localStorage.getItem("role") === "admin" && (
             <Link className="link02" to="/admin">
               Admin Dashboard
             </Link>
           )}
         </div>
-          <button onClick={handleSignOut} className="Sign-Out">
-            Sign out
-          </button>
+        <button onClick={handleSignOut} className="Sign-Out">
+          Sign out
+        </button>
       </header>
 
       <h1 className="titulo-secundario">Home</h1>
       <div className="select-container">
         <select
           className="select"
+          value={filtroData}
           onChange={(e) => setFiltroData(e.target.value)}
         >
           <option value="">Filtrar por data</option>
@@ -97,12 +107,18 @@ function Home({ eventos, adicionarEvento }) {
 
         <select
           className="select"
-          onChange={(e) => setFiltroCategoria(e.target.value)}
+          value={filtroCategoria}
+          onChange={(e) => {
+            console.log("Categoria selecionada:", e.target.value);
+            setFiltroCategoria(e.target.value);
+          }}
         >
           <option value="">Categorias</option>
           <option value="musica">Música</option>
           <option value="tecnologia">Tecnologia</option>
           <option value="esportes">Esportes</option>
+          <option value="arte">Arte</option>
+          <option value="educacao">Educação</option>
         </select>
       </div>
 
