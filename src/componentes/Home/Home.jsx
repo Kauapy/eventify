@@ -1,18 +1,33 @@
-import React, { useState, useMemo } from "react";
-import "./Home.css";
+import React, { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../services/api";
+import "./Home.css";
+import EventCard from "./EventCard";
+import EventDetail from "./EventDetail";
 
-function Home({ eventos = [], removerEvento }) {
+const CATEGORIAS = [
+  { value: "", label: "Todas as categorias" },
+  { value: "Música", label: "Música" },
+  { value: "Tecnologia", label: "Tecnologia" },
+  { value: "Esportes", label: "Esportes" },
+  { value: "Arte", label: "Arte" },
+  { value: "Educação", label: "Educação" },
+  { value: "Negócios", label: "Negócios" },
+  { value: "Geral", label: "Geral" },
+];
+
+function Home({ eventos = [], carregando, erro }) {
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
 
   const [filtroData, setFiltroData] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("");
+  const [busca, setBusca] = useState("");
+  const [selecionado, setSelecionado] = useState(null);
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("nome");
     navigate("/login");
   };
 
@@ -27,6 +42,7 @@ function Home({ eventos = [], removerEvento }) {
   const eventosFiltrados = useMemo(() => {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
+    const buscaNorm = normalize(busca);
 
     return eventos.filter((evento) => {
       const dataEvento = new Date(evento.data);
@@ -36,32 +52,55 @@ function Home({ eventos = [], removerEvento }) {
       if (filtroData === "hoje" && dataEvento.getTime() !== hoje.getTime()) return false;
       if (filtroData === "passado" && dataEvento >= hoje) return false;
 
-      if (
-        filtroCategoria &&
-        !normalize(evento.categoria).includes(normalize(filtroCategoria))
-      ) {
-        return false;
+      if (filtroCategoria && evento.categoria !== filtroCategoria) return false;
+
+      if (buscaNorm) {
+        const alvo = normalize(
+          `${evento.titulo || ""} ${evento.descricaoCurta || ""} ${evento.local || ""}`
+        );
+        if (!alvo.includes(buscaNorm)) return false;
       }
       return true;
     });
-  }, [eventos, filtroData, filtroCategoria]);
+  }, [eventos, filtroData, filtroCategoria, busca]);
 
-  const formatarData = (data) => {
-    if (!data) return "";
-    const d = new Date(data);
-    if (Number.isNaN(d.getTime())) return data;
-    return d.toLocaleDateString("pt-BR");
-  };
-
-  const excluirEvento = (id) => {
-    if (!id) return;
-    api
-      .delete(`/events/${id}`)
-      .then(() => removerEvento?.(id))
-      .catch((err) => {
-        console.error("Erro ao excluir evento:", err);
-        alert("Não foi possível excluir o evento.");
-      });
+  const renderConteudo = () => {
+    if (carregando) {
+      return (
+        <div className="eventos-grid">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="event-skeleton" />
+          ))}
+        </div>
+      );
+    }
+    if (erro) {
+      return (
+        <div className="estado-vazio">
+          <h3>Não foi possível carregar os eventos</h3>
+          <p>{erro}</p>
+        </div>
+      );
+    }
+    if (!eventosFiltrados.length) {
+      return (
+        <div className="estado-vazio">
+          <h3>Nenhum evento encontrado</h3>
+          <p>Tente ajustar os filtros ou volte mais tarde.</p>
+        </div>
+      );
+    }
+    return (
+      <div className="eventos-grid">
+        {eventosFiltrados.map((evento) => (
+          <EventCard
+            key={evento._id}
+            evento={evento}
+            onAbrir={setSelecionado}
+          />
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -69,13 +108,9 @@ function Home({ eventos = [], removerEvento }) {
       <header className="header-container">
         <h1 className="titulo-principal">Eventify</h1>
         <nav className="links-container">
-          <Link className="link02" to="/home">
-            Home
-          </Link>
+          <Link className="link02" to="/home">Home</Link>
           {role === "admin" && (
-            <Link className="link02" to="/admin">
-              Admin Dashboard
-            </Link>
+            <Link className="link02" to="/admin">Admin Dashboard</Link>
           )}
         </nav>
         <button onClick={handleSignOut} className="Sign-Out" type="button">
@@ -84,62 +119,48 @@ function Home({ eventos = [], removerEvento }) {
       </header>
 
       <section className="conteudo">
-        <h2 className="titulo-secundario">Eventos</h2>
+        <div className="hero">
+          <h2 className="titulo-secundario">Descubra eventos imperdíveis</h2>
+          <p className="subtitulo">
+            Encontre experiências de música, tecnologia, esportes e muito mais.
+          </p>
+        </div>
 
-        <div className="select-container">
+        <div className="filtros">
+          <input
+            className="busca-input"
+            type="search"
+            placeholder="Buscar por título, local..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
           <select
             className="select"
             value={filtroData}
             onChange={(e) => setFiltroData(e.target.value)}
           >
-            <option value="">Filtrar por data</option>
+            <option value="">Qualquer data</option>
             <option value="futuro">Futuros</option>
             <option value="hoje">Hoje</option>
             <option value="passado">Passados</option>
           </select>
-
           <select
             className="select"
             value={filtroCategoria}
             onChange={(e) => setFiltroCategoria(e.target.value)}
           >
-            <option value="">Todas as categorias</option>
-            <option value="musica">Música</option>
-            <option value="tecnologia">Tecnologia</option>
-            <option value="esportes">Esportes</option>
-            <option value="arte">Arte</option>
-            <option value="educacao">Educação</option>
-            <option value="geral">Geral</option>
+            {CATEGORIAS.map((c) => (
+              <option key={c.value} value={c.value}>{c.label}</option>
+            ))}
           </select>
         </div>
 
-        {eventosFiltrados.length === 0 ? (
-          <p className="sem-eventos">Nenhum evento encontrado.</p>
-        ) : (
-          <div className="eventos-grid">
-            {eventosFiltrados.map((evento) => (
-              <article key={evento._id || evento.nome} className="evento-card">
-                <header className="evento-card-header">
-                  <h3 className="evento-titulo">{evento.nome}</h3>
-                  {role === "admin" && (
-                    <button
-                      onClick={() => excluirEvento(evento._id)}
-                      className="btn-excluir"
-                      title="Excluir evento"
-                      type="button"
-                    >
-                      ×
-                    </button>
-                  )}
-                </header>
-                <p className="evento-data">📅 {formatarData(evento.data)}</p>
-                <p className="evento-categoria">{evento.categoria}</p>
-                <p className="evento-descricao">{evento.descricao}</p>
-              </article>
-            ))}
-          </div>
-        )}
+        {renderConteudo()}
       </section>
+
+      {selecionado && (
+        <EventDetail evento={selecionado} onClose={() => setSelecionado(null)} />
+      )}
     </div>
   );
 }

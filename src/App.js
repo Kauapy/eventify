@@ -23,12 +23,23 @@ function AdminRoute({ children }) {
 
 function App() {
   const [eventos, setEventos] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
-  const carregarEventos = useCallback(() => {
-    api
-      .get("/events")
-      .then(({ data }) => setEventos(data))
-      .catch((err) => console.error("Erro ao buscar eventos:", err));
+  const carregarEventos = useCallback(async () => {
+    setCarregando(true);
+    setErro("");
+    try {
+      const { data } = await api.get("/events");
+      setEventos(data);
+    } catch (err) {
+      setErro(
+        err?.response?.data?.mensagem ||
+          "Não foi possível conectar ao servidor. Verifique se o backend está rodando."
+      );
+    } finally {
+      setCarregando(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -39,8 +50,14 @@ function App() {
     setEventos((prev) => [...prev, novoEvento]);
   };
 
+  const atualizarEvento = (eventoAtualizado) => {
+    setEventos((prev) =>
+      prev.map((e) => (e._id === eventoAtualizado._id ? eventoAtualizado : e))
+    );
+  };
+
   const removerEvento = (id) => {
-    setEventos((prev) => prev.filter((evento) => evento._id !== id));
+    setEventos((prev) => prev.filter((e) => e._id !== id));
   };
 
   return (
@@ -54,7 +71,7 @@ function App() {
             path="/home"
             element={
               <PrivateRoute>
-                <Home eventos={eventos} removerEvento={removerEvento} />
+                <Home eventos={eventos} carregando={carregando} erro={erro} />
               </PrivateRoute>
             }
           />
@@ -62,7 +79,14 @@ function App() {
             path="/admin"
             element={
               <AdminRoute>
-                <AdminDashboard adicionarEvento={adicionarEvento} />
+                <AdminDashboard
+                  eventos={eventos}
+                  carregando={carregando}
+                  erro={erro}
+                  adicionarEvento={adicionarEvento}
+                  atualizarEvento={atualizarEvento}
+                  removerEvento={removerEvento}
+                />
               </AdminRoute>
             }
           />

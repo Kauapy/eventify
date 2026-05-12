@@ -15,7 +15,7 @@
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   border: 1px solid var(--border);
-  padding: 2rem;
+  padding: 1.75rem 1.75rem 1.5rem;
   border-radius: 16px;
   width: 100%;
   max-width: 480px;
@@ -23,6 +23,10 @@
   overflow-y: auto;
   box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
   animation: fadeIn 0.25s ease-in-out;
+}
+
+.modal-content.event-form {
+  max-width: 640px;
 }
 
 @keyframes overlayFade {
@@ -42,31 +46,60 @@
   text-align: left;
 }
 
+.modal-erro-geral {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  padding: 0.65rem 0.9rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  margin: 0 0 1rem;
+}
+
 .modal-form {
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
 }
+
+.form-row {
+  margin-bottom: 0.5rem;
+}
+
+.form-row-2,
+.form-row-3 {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.form-row-2 { grid-template-columns: 1fr 1fr; }
+.form-row-3 { grid-template-columns: 1fr 1fr 1fr; }
 
 .modal-label {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  margin-bottom: 1rem;
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
+}
+
+.modal-label small {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.75rem;
 }
 
 .modal-input,
 .modal-select,
 .modal-textarea {
   width: 100%;
-  padding: 0.7rem 0.85rem;
+  padding: 0.65rem 0.85rem;
   border-radius: 10px;
   border: 1px solid var(--border);
   background-color: var(--bg-input);
   color: var(--text-primary);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-family: inherit;
   transition: border-color 0.2s ease, background-color 0.2s ease;
   outline: none;
@@ -93,11 +126,20 @@
   background-size: 16px;
 }
 
+.campo-erro {
+  display: block;
+  color: var(--danger);
+  font-size: 0.78rem;
+  margin-top: 0.2rem;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
 }
 
 .modal-button {
@@ -136,9 +178,19 @@
   color: var(--text-primary);
 }
 
-@media (max-width: 480px) {
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .form-row-2,
+  .form-row-3 {
+    grid-template-columns: 1fr;
+  }
   .modal-content {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
   .modal-actions {
     flex-direction: column-reverse;
@@ -146,10 +198,4 @@
   .modal-button {
     width: 100%;
   }
-}
-
-/* Input de data com ícone branco em dark mode */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.8);
-  cursor: pointer;
 }

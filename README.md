@@ -1,41 +1,47 @@
 # Eventify
 
-Plataforma fullstack para descobrir, criar e gerenciar eventos. Usuários comuns podem navegar pelo catálogo de eventos com filtros por data e categoria, enquanto administradores têm um painel dedicado para cadastrar e remover eventos.
+Plataforma fullstack para descobrir, criar e gerenciar eventos. Usuários navegam por um catálogo visual de eventos com imagens, valores, datas e detalhes completos, podendo demonstrar interesse. Administradores contam com um painel dedicado para CRUD completo de eventos.
 
 ---
 
 ## ✨ Funcionalidades
 
-- 🔐 **Autenticação JWT** com cadastro, login e proteção de rotas
-- 👥 **Dois papéis**: `user` (consulta) e `admin` (gerencia)
-- 📅 **Listagem de eventos** com filtros por **data** (futuros, hoje, passados) e **categoria**
-- ➕ **Criação de eventos** via modal acessível somente para administradores
-- 🗑️ **Exclusão de eventos** pelo painel admin
-- 📱 **Layout responsivo** (mobile, tablet e desktop)
-- 🎨 **Visual moderno em dark mode** com gradientes e microinterações
+### Usuário
+- 🔐 Cadastro e login com **JWT**
+- 🗂️ **Lista de eventos em cards** com imagem, título, descrição curta, data, horário, local, categoria e valor
+- 🔎 **Busca** por título / local + filtros por **data** (futuros, hoje, passados) e **categoria**
+- 📄 **Modal de detalhes** com descrição completa, valor, vagas e imagem em destaque
+- ❤️ Botão **"Tenho interesse"** (persistente via `localStorage`)
+- 💀 **Estados de carregamento** (skeletons), erro e lista vazia
+- 📱 **Responsivo** em mobile, tablet e desktop
+
+### Admin
+- 🛠️ Painel com **lista visual de todos os eventos** cadastrados
+- ➕ **Criar** eventos com formulário completo:
+  - título, descrição curta (até 200 chars), descrição completa
+  - URL da imagem, valor (R$), data, horário, local
+  - categoria e vagas (opcional)
+- ✏️ **Editar** eventos existentes em modal pré-preenchido
+- 🗑️ **Excluir** eventos com confirmação
+- ✅ **Feedback visual** ao salvar, atualizar ou excluir
+- 🔒 Rotas protegidas: middleware backend + `AdminRoute` no frontend
 
 ---
 
 ## 🛠️ Tecnologias
 
 **Frontend**
-
 - React 19 + React Router DOM 7
-- Axios (com interceptor de token JWT)
-- CSS puro com variáveis e media queries
+- Axios com interceptor de token JWT
+- CSS puro com variáveis (`--accent`, `--bg-secondary`, etc.) e media queries
 
 **Backend**
-
 - Node.js + Express 5
-- MongoDB Atlas + Mongoose
-- bcrypt + jsonwebtoken (JWT)
+- MongoDB Atlas + Mongoose 8
+- bcrypt + jsonwebtoken
 - dotenv, cors
 
-**Tooling**
-
-- Create React App
-- concurrently + cross-env
-- nodemon
+**Tooling**: Create React App, concurrently, cross-env, nodemon
 
 ---
 
@@ -45,18 +51,19 @@ Plataforma fullstack para descobrir, criar e gerenciar eventos. Usuários comuns
 eventify/
 ├── backend/
 │   ├── middlewares/        # authMiddleware, verificarAdmin
-│   ├── models/             # User, Event
-│   ├── routes/             # authRoutes, eventRoutes, adminRoutes
-│   ├── createAdmin.js      # script para criar o usuário admin inicial
+│   ├── models/             # User, Event (com timestamps)
+│   ├── routes/             # authRoutes, eventRoutes (CRUD), adminRoutes
+│   ├── createAdmin.js      # cria o admin inicial a partir do .env
 │   └── server.js
-├── public/                 # index.html, manifest, favicon
+├── public/                 # index.html (PWA), manifest, favicon
 ├── src/
 │   ├── componentes/
-│   │   ├── Home/           # Home, AdminDashboard, EventModal
+│   │   ├── Home/           # Home, AdminDashboard, EventCard, EventDetail, EventModal (form)
 │   │   ├── LoginPage/      # Login
 │   │   └── Register/       # Register
-│   ├── services/api.js     # instância Axios com baseURL e token
-│   ├── App.js              # rotas + ProtectedRoute/AdminRoute
+│   ├── services/api.js     # instância Axios com baseURL e interceptor JWT
+│   ├── utils/              # format.js, interesses.js
+│   ├── App.js              # rotas + ProtectedRoute/AdminRoute + estado global de eventos
 │   └── index.js
 └── package.json
 ```
@@ -66,88 +73,77 @@ eventify/
 ## 🚀 Como rodar localmente
 
 ### Pré-requisitos
-
 - Node.js 18+ e npm
-- Uma conta no [MongoDB Atlas](https://www.mongodb.com/atlas) (ou um MongoDB local)
+- Conta no [MongoDB Atlas](https://www.mongodb.com/atlas) (ou Mongo local)
 
-### 1. Clonar o repositório
-
+### 1. Clonar
 ```bash
 git clone https://github.com/<seu-usuario>/eventify.git
 cd eventify
 ```
 
-### 2. Configurar variáveis de ambiente
-
-Copie o arquivo de exemplo e preencha com suas credenciais:
-
+### 2. Variáveis de ambiente
+Copie o exemplo:
 ```bash
 cp backend/.env.example backend/.env
 ```
 
 Edite `backend/.env`:
-
 ```env
-MONGO_URL=mongodb+srv://<usuario>:<senha>@<cluster>.mongodb.net/eventify
+MONGO_URL=mongodb+srv://<usuario>:<senha>@<cluster>.mongodb.net/eventify?retryWrites=true&w=majority
 JWT_SECRET=uma-chave-forte-e-aleatoria
 ADMIN_EMAIL=admin@example.com
 ADMIN_PASSWORD=SuaSenhaForte123@
 ```
 
-> ⚠️ **Importante:** o `.env` está no `.gitignore`. **Nunca** versione credenciais reais.
+> ⚠️ **Importante:** se sua senha tem caracteres especiais (`@`, `:`, `/`, `#`), use **URL-encode**. Ex.: `@` → `%40`.
 
 ### 3. Instalar dependências
-
 ```bash
-# Frontend (raiz)
 npm install
-
-# Backend
 cd backend && npm install && cd ..
 ```
 
-### 4. Criar o usuário administrador (uma vez)
-
+### 4. Criar o admin inicial (uma vez)
 ```bash
 node backend/createAdmin.js
 ```
 
 ### 5. Subir frontend + backend juntos
-
 ```bash
 npm run dev
 ```
-
 - Frontend: http://localhost:3001
 - Backend: http://localhost:3000
-- O CRA já está configurado com `proxy` para `http://localhost:3000`, então o frontend chama `/auth/login`, `/events`, etc., sem se preocupar com CORS em dev.
+- O CRA proxy redireciona `/auth`, `/events`, `/admin` para o backend automaticamente.
 
 ### Scripts úteis
-
 | Comando             | O que faz                                  |
 | ------------------- | ------------------------------------------ |
-| `npm start`         | Sobe apenas o frontend (porta 3001)        |
-| `npm run backend`   | Sobe apenas o backend com nodemon          |
-| `npm run dev`       | Sobe frontend e backend simultaneamente    |
-| `npm run build`     | Gera o bundle de produção em `build/`      |
-| `npm test`          | Roda os testes (Jest + Testing Library)    |
+| `npm start`         | Sobe só o frontend (porta 3001)            |
+| `npm run backend`   | Sobe só o backend com nodemon (porta 3000) |
+| `npm run dev`       | Sobe ambos simultaneamente                 |
+| `npm run build`     | Bundle de produção em `build/`             |
+| `npm test`          | Roda os testes                             |
 
 ---
 
 ## 🔌 Endpoints da API
 
 ### Auth
-| Método | Rota              | Descrição                  |
-| ------ | ----------------- | -------------------------- |
-| POST   | `/auth/register`  | Cadastrar novo usuário     |
-| POST   | `/auth/login`     | Login (retorna JWT + role) |
+| Método | Rota              | Auth     | Descrição                  |
+| ------ | ----------------- | -------- | -------------------------- |
+| POST   | `/auth/register`  | público  | Cadastrar usuário          |
+| POST   | `/auth/login`     | público  | Login (retorna JWT + role) |
 
 ### Eventos
-| Método | Rota             | Auth         | Descrição               |
-| ------ | ---------------- | ------------ | ----------------------- |
-| GET    | `/events`        | público      | Listar eventos          |
-| POST   | `/events`        | admin        | Criar evento            |
-| DELETE | `/events/:id`    | admin        | Excluir evento          |
+| Método | Rota             | Auth   | Descrição                |
+| ------ | ---------------- | ------ | ------------------------ |
+| GET    | `/events`        | público| Listar todos             |
+| GET    | `/events/:id`    | público| Detalhes de um evento    |
+| POST   | `/events`        | admin  | Criar evento (validado)  |
+| PUT    | `/events/:id`    | admin  | Atualizar evento         |
+| DELETE | `/events/:id`    | admin  | Excluir evento           |
 
 ### Admin
 | Método | Rota                | Auth   | Descrição              |
@@ -156,29 +152,59 @@ npm run dev
 | POST   | `/admin/user`       | admin  | Criar usuário          |
 | DELETE | `/admin/user/:id`   | admin  | Excluir usuário        |
 
+### Schema do evento
+```json
+{
+  "titulo": "string (≤120)",
+  "descricaoCurta": "string (≤200)",
+  "descricaoCompleta": "string",
+  "imagem": "URL string",
+  "valor": "number (≥0, 0 = gratuito)",
+  "data": "Date",
+  "horario": "HH:MM",
+  "local": "string",
+  "categoria": "Geral|Tecnologia|Esportes|Educação|Arte|Música|Negócios",
+  "vagas": "integer ≥0 ou null"
+}
+```
+
 ---
 
 ## 🖼️ Prints
 
-> Adicione aqui screenshots das telas após rodar o projeto:
+> Salve screenshots em `docs/` e referencie aqui:
 >
-> - `docs/login.png` — Tela de Login
-> - `docs/register.png` — Tela de Cadastro
-> - `docs/home.png` — Listagem de eventos
-> - `docs/admin.png` — Painel do administrador
-> - `docs/modal.png` — Modal de criação de evento
+> - `docs/home.png` — listagem com cards e filtros
+> - `docs/detail.png` — modal de detalhes
+> - `docs/admin.png` — painel administrativo
+> - `docs/form.png` — formulário de criação/edição
+> - `docs/login.png` / `docs/register.png` — autenticação
 
 ---
 
 ## 🔒 Segurança
 
-- Senhas são armazenadas com `bcrypt` (salt rounds = 10).
-- Tokens JWT expiram em 1h.
-- O `.env` é ignorado pelo Git por padrão (`.gitignore`).
-- O painel admin tem proteção dupla: rota privada no frontend e middleware `verificarAdmin` no backend.
+- Senhas com `bcrypt` (10 rounds).
+- Tokens JWT expiram em 1h e são injetados automaticamente via interceptor Axios.
+- `.env` no `.gitignore` por padrão.
+- Painel admin com **dupla proteção**: rota privada no frontend + middleware `verificarAdmin` no backend.
+- Validação de payload no backend (campos obrigatórios, tipos, ranges).
+- Senha do usuário nunca volta em respostas do `/admin/users` (`select('-senha')`).
+
+---
+
+## 🌱 Melhorias futuras
+
+- Upload de imagem real (Cloudinary, S3 ou multer + disco)
+- Reservas/inscrições com decremento de vagas (já temos o campo)
+- Página pública de detalhes do evento com URL compartilhável (`/eventos/:slug`)
+- Paginação ou scroll infinito na listagem
+- Sistema de favoritos persistido por usuário (não só localStorage)
+- Notificações por email com eventos próximos da data
+- Deploy automatizado (Vercel + Render)
 
 ---
 
 ## 📜 Licença
 
-MIT. Sinta-se à vontade para usar e adaptar.
+MIT. Use, adapte, compartilhe.
