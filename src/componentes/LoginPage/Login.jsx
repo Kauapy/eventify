@@ -1,101 +1,107 @@
-import React, { useState } from 'react';
-import './Login.css'; 
-import { useNavigate, Link } from 'react-router-dom';
-import Register from '../Register/Register.jsx';
+import React, { useState } from "react";
+import "./Login.css";
+import { useNavigate, Link } from "react-router-dom";
+import api from "../../services/api";
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const senhaRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 function Login() {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const senhaRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erroEmail, setErroEmail] = useState("");
+  const [erroSenha, setErroSenha] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
-    const [erroEmail, setErroEmail] = useState("");
-    const [erroSenha, setErroSenha] = useState("");
+  const navigate = useNavigate();
 
-    const validarEmail = (email) => emailRegex.test(email);
-    const validarSenha = (senha) => senhaRegex.test(senha);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const emailValido = emailRegex.test(email);
+    const senhaValida = senhaRegex.test(senha);
 
-    const navigate = useNavigate();
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const emailValido = validarEmail(email);
-        const senhaValida = validarSenha(senha);
-
-        setErroEmail(emailValido ? "" : "E-mail inválido");
-        setErroSenha(senhaValida ? "" : "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.");
-
-        if (!emailValido || !senhaValida) return;
-
-        try {
-            const response = await fetch('/auth/login', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ email, senha })
-            });
-
-            const data = await response.json();
-
-            if (data.token) {
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("role", data.role);
-                console.log("Login Sucedido");
-                console.log("Redirecionando para /home");
-                navigate("/home");
-            } else {
-                console.error("Erro no login:", data.message);
-                setErroEmail("E-mail ou senha inválidos");
-            }
-        } catch (error) {
-            console.error("Erro na requisição", error);
-        }
-    };
-
-    return (
-        <div className="login-container">
-            <div className="main-container">
-                <div className="login-box">
-                    <h1 className='eventify'>Eventify</h1>
-                    <p className='login'>Login</p>
-                    <h2 className="login-title">Entrar</h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="input-container">
-                            <input
-                                type="email"
-                                className="input-field"
-                                placeholder="E-mail"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            {erroEmail && <p className="erro-message">{erroEmail}</p>}
-                        </div>
-
-                        <div className="input-container">
-                            <input
-                                type="password"
-                                className="input-field"
-                                placeholder="Senha"
-                                value={senha}
-                                onChange={(e) => setSenha(e.target.value)}
-                            />
-                            {erroSenha && <p className="erro-message">{erroSenha}</p>}
-                        </div>
-
-                        <button type="submit" className="input-button">
-                            Enviar
-                        </button>
-                        <div className='link-container'>
-                            <p>Esqueceu a senha?</p>
-                            <Link className='link' to="/Register" >Cadastre-se aqui</Link>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+    setErroEmail(emailValido ? "" : "E-mail inválido");
+    setErroSenha(
+      senhaValida
+        ? ""
+        : "A senha precisa ter no mínimo 8 caracteres, com letra maiúscula, minúscula, número e caractere especial."
     );
+
+    if (!emailValido || !senhaValida) return;
+
+    setLoading(true);
+    try {
+      const { data } = await api.post("/auth/login", { email, senha });
+      if (data?.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.role);
+        if (data.nome) localStorage.setItem("nome", data.nome);
+        navigate(data.role === "admin" ? "/admin" : "/home");
+      } else {
+        setErroEmail("E-mail ou senha inválidos");
+      }
+    } catch (error) {
+      const mensagem =
+        error?.response?.data?.mensagem || "E-mail ou senha inválidos";
+      setErroEmail(mensagem);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="login-container">
+      <div className="main-container">
+        <div className="login-box">
+          <div className="brand">
+            <h1 className="eventify">Eventify</h1>
+            <span className="brand-tag">Login</span>
+          </div>
+          <h2 className="login-title">Entrar</h2>
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="input-container">
+              <input
+                type="email"
+                className="input-field"
+                placeholder="E-mail"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+              />
+              {erroEmail && <p className="erro-message">{erroEmail}</p>}
+            </div>
+
+            <div className="input-container">
+              <input
+                type="password"
+                className="input-field"
+                placeholder="Senha"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                autoComplete="current-password"
+              />
+              {erroSenha && <p className="erro-message">{erroSenha}</p>}
+            </div>
+
+            <button
+              type="submit"
+              className="input-button"
+              disabled={loading}
+            >
+              {loading ? "Entrando..." : "Enviar"}
+            </button>
+
+            <div className="link-container">
+              <p>Ainda não tem conta?</p>
+              <Link className="link" to="/register">
+                Cadastre-se
+              </Link>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Login;

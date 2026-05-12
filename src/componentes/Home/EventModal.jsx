@@ -1,51 +1,53 @@
 import React, { useState } from "react";
 import "./EventModal.css";
-import axios from "axios";
-import { type } from "@testing-library/user-event/dist/type";
+import api from "../../services/api";
 
 function EventModal({ visible, onClose, adicionarEvento }) {
-
-  const token = localStorage.getItem("token");
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [descricao, setDescricao] = useState("");
   const [categoria, setCategoria] = useState("Geral");
+  const [salvando, setSalvando] = useState(false);
 
   if (!visible) return null;
 
-  function handleSave(e) {
-  e.preventDefault();             
-  axios
-    .post(
-      "/events",
-      { nome: title, data: date, categoria, descricao },
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
-    .then(() => {
+  const resetar = () => {
+    setTitle("");
+    setDate("");
+    setDescricao("");
+    setCategoria("Geral");
+  };
 
-      console.log("adicionarEvento é:", typeof adicionarEvento);
-
-      adicionarEvento({
+  const handleSave = async (e) => {
+    e.preventDefault();
+    if (salvando) return;
+    setSalvando(true);
+    try {
+      const { data: novoEvento } = await api.post("/events", {
         nome: title,
         data: date,
         categoria,
         descricao,
       });
-
+      adicionarEvento?.(novoEvento);
+      resetar();
       onClose();
-    })
-    .catch((err) => {
+    } catch (err) {
       console.error("Erro ao criar evento:", err);
-      alert("Não conseguiu criar o evento");
-    });
-}
-
-if(!visible) return null;
-
+      alert(err?.response?.data?.mensagem || "Não foi possível criar o evento.");
+    } finally {
+      setSalvando(false);
+    }
+  };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div
+      className="modal-overlay"
+      onClick={(e) => {
+        if (e.target.classList.contains("modal-overlay")) onClose();
+      }}
+    >
+      <div className="modal-content" role="dialog" aria-modal="true">
         <h2 className="modal-title">Criar Novo Evento</h2>
 
         <form onSubmit={handleSave} className="modal-form">
@@ -82,9 +84,9 @@ if(!visible) return null;
             >
               <option value="Geral">Geral</option>
               <option value="Tecnologia">Tecnologia</option>
-              <option value="Negócios">Esportes</option>
+              <option value="Esportes">Esportes</option>
               <option value="Educação">Educação</option>
-              <option value="arte">Arte</option>
+              <option value="Arte">Arte</option>
               <option value="Música">Música</option>
             </select>
           </label>
@@ -105,11 +107,12 @@ if(!visible) return null;
               className="modal-button cancel"
               type="button"
               onClick={onClose}
+              disabled={salvando}
             >
               Cancelar
             </button>
-            <button className="modal-button save" type="submit">
-              Salvar
+            <button className="modal-button save" type="submit" disabled={salvando}>
+              {salvando ? "Salvando..." : "Salvar"}
             </button>
           </div>
         </form>

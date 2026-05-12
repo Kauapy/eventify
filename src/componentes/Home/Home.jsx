@@ -1,143 +1,145 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "./Home.css";
 import { Link, useNavigate } from "react-router-dom";
-import AdminDashboard from "./AdminDashboard";
-import axios from "axios";
-import { useEffect } from "react";
+import api from "../../services/api";
 
-function Home({ eventos, adicionarEvento }) {
+function Home({ eventos = [], removerEvento }) {
   const navigate = useNavigate();
-
-  const handleSignOut = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
+  const role = localStorage.getItem("role");
 
   const [filtroData, setFiltroData] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("");
-  const [eventosState, setEventos] = useState(eventos || []);
-  const user = JSON.parse(localStorage.getItem("user"));
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/login");
+  };
 
   const normalize = (str = "") =>
     str
+      .toString()
       .trim()
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[̀-ͯ]/g, "")
       .toLowerCase();
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3001/events")
-      .then((res) => setEventos(res.data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  const eventosFiltrados = eventosState.filter((evento) => {
-    const dataEvento = new Date(evento.data);
+  const eventosFiltrados = useMemo(() => {
     const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
 
-    if (filtroData === "futuro" && dataEvento < hoje) return false;
-    if (
-      filtroData === "hoje" &&
-      dataEvento.toDateString() !== hoje.toDateString()
-    )
-      return false;
-    if (filtroData === "passado" && dataEvento > hoje) return false;
+    return eventos.filter((evento) => {
+      const dataEvento = new Date(evento.data);
+      dataEvento.setHours(0, 0, 0, 0);
 
-    if (
-      filtroCategoria &&
-      !normalize(evento.categoria).includes(normalize(filtroCategoria))
-    ) {
-      return false;
-    }
+      if (filtroData === "futuro" && dataEvento <= hoje) return false;
+      if (filtroData === "hoje" && dataEvento.getTime() !== hoje.getTime()) return false;
+      if (filtroData === "passado" && dataEvento >= hoje) return false;
 
-    return true;
-  });
+      if (
+        filtroCategoria &&
+        !normalize(evento.categoria).includes(normalize(filtroCategoria))
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [eventos, filtroData, filtroCategoria]);
 
-  function excluirEvento(id) {
-    if (!id) {
-      console.warn("ID inválido:", id);
-      return;
-    }
-    axios
-      .delete(`http://localhost:3001/events/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
+  const formatarData = (data) => {
+    if (!data) return "";
+    const d = new Date(data);
+    if (Number.isNaN(d.getTime())) return data;
+    return d.toLocaleDateString("pt-BR");
+  };
 
-      .then(() => {
-        setEventos((prev) => prev.filter((evento) => evento._id !== id));
-      })
-
+  const excluirEvento = (id) => {
+    if (!id) return;
+    api
+      .delete(`/events/${id}`)
+      .then(() => removerEvento?.(id))
       .catch((err) => {
         console.error("Erro ao excluir evento:", err);
+        alert("Não foi possível excluir o evento.");
       });
-  }
+  };
 
   return (
-    <div>
+    <div className="home-page">
       <header className="header-container">
         <h1 className="titulo-principal">Eventify</h1>
-        <div className="links-container">
+        <nav className="links-container">
           <Link className="link02" to="/home">
             Home
           </Link>
-          {localStorage.getItem("role") === "admin" && (
+          {role === "admin" && (
             <Link className="link02" to="/admin">
               Admin Dashboard
             </Link>
           )}
-        </div>
-        <button onClick={handleSignOut} className="Sign-Out">
-          Sign out
+        </nav>
+        <button onClick={handleSignOut} className="Sign-Out" type="button">
+          Sair
         </button>
       </header>
 
-      <h1 className="titulo-secundario">Home</h1>
-      <div className="select-container">
-        <select
-          className="select"
-          value={filtroData}
-          onChange={(e) => setFiltroData(e.target.value)}
-        >
-          <option value="">Filtrar por data</option>
-          <option value="futuro">Futuro</option>
-          <option value="hoje">Presente</option>
-          <option value="passado">Passado</option>
-        </select>
+      <section className="conteudo">
+        <h2 className="titulo-secundario">Eventos</h2>
 
-        <select
-          className="select"
-          value={filtroCategoria}
-          onChange={(e) => {
-            console.log("Categoria selecionada:", e.target.value);
-            setFiltroCategoria(e.target.value);
-          }}
-        >
-          <option value="">Categorias</option>
-          <option value="musica">Música</option>
-          <option value="tecnologia">Tecnologia</option>
-          <option value="esportes">Esportes</option>
-          <option value="arte">Arte</option>
-          <option value="educacao">Educação</option>
-        </select>
-      </div>
+        <div className="select-container">
+          <select
+            className="select"
+            value={filtroData}
+            onChange={(e) => setFiltroData(e.target.value)}
+          >
+            <option value="">Filtrar por data</option>
+            <option value="futuro">Futuros</option>
+            <option value="hoje">Hoje</option>
+            <option value="passado">Passados</option>
+          </select>
 
-      {eventosFiltrados.map((evento) => (
-        <div key={evento.id || evento.nome} className="evento-card">
-          <h3 className="evento-titulo">{evento.nome}</h3>
-          <p className="evento-data">Data: {evento.data}</p>
-          <p className="evento-categoria">Categoria: {evento.categoria}</p>
-          <p className="evento-descricao">{evento.descricao}</p>
-          {user?.role === "admin" && (
-            <button
-              onClick={() => excluirEvento(evento._id)}
-              className="btn-excluir"
-            >
-              ❌
-            </button>
-          )}
+          <select
+            className="select"
+            value={filtroCategoria}
+            onChange={(e) => setFiltroCategoria(e.target.value)}
+          >
+            <option value="">Todas as categorias</option>
+            <option value="musica">Música</option>
+            <option value="tecnologia">Tecnologia</option>
+            <option value="esportes">Esportes</option>
+            <option value="arte">Arte</option>
+            <option value="educacao">Educação</option>
+            <option value="geral">Geral</option>
+          </select>
         </div>
-      ))}
+
+        {eventosFiltrados.length === 0 ? (
+          <p className="sem-eventos">Nenhum evento encontrado.</p>
+        ) : (
+          <div className="eventos-grid">
+            {eventosFiltrados.map((evento) => (
+              <article key={evento._id || evento.nome} className="evento-card">
+                <header className="evento-card-header">
+                  <h3 className="evento-titulo">{evento.nome}</h3>
+                  {role === "admin" && (
+                    <button
+                      onClick={() => excluirEvento(evento._id)}
+                      className="btn-excluir"
+                      title="Excluir evento"
+                      type="button"
+                    >
+                      ×
+                    </button>
+                  )}
+                </header>
+                <p className="evento-data">📅 {formatarData(evento.data)}</p>
+                <p className="evento-categoria">{evento.categoria}</p>
+                <p className="evento-descricao">{evento.descricao}</p>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

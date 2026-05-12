@@ -1,9 +1,8 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import App from "./App";
 
-
-test('renders learn react link', () => {
+test("redireciona da raiz para a tela de login", () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const titulo = screen.getByText(/Eventify/i);
+  expect(titulo).toBeInTheDocument();
 });

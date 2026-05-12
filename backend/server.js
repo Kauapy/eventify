@@ -1,72 +1,62 @@
 const path = require('path');
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+
 const express = require('express');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const cors = require('cors');
-const fs = require('fs');
 
 const app = express();
+
 app.use(cors());
-app.use(express.json())
+app.use(express.json());
 
-app.use((req, res, next) => {
-  console.log(`📥 ${req.method} ${req.url}`);
-  console.log('Body:', req.body);
-  next();
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    console.log(`📥 ${req.method} ${req.url}`);
+    next();
+  });
+}
 
-console.log("🔍 Carregando rotas...");
 const authRoutes = require('./routes/authRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 
-const envContent = fs.readFileSync(path.join(__dirname, '.env')).toString();
-console.log("Conteúdo do .env:", envContent);
-
-dotenv.config({ path: path.join(__dirname, '.env') });
-
-console.log("🔍 MONGO_URL carregada:", process.env.MONGO_URL);
-
-console.log("🔍 Registrando rotas...");
 app.use('/auth', authRoutes);
 app.use('/events', eventRoutes);
 app.use('/admin', adminRoutes);
 
 app.get('/', (req, res) => {
-  res.send("🚀 API funcionando!");
+  res.send('🚀 API Eventify funcionando!');
 });
 
 app.get('/test', (req, res) => {
-  res.json({ mensagem: "Servidor funcionando!", timestamp: new Date() });
+  res.json({ mensagem: 'Servidor funcionando!', timestamp: new Date() });
 });
 
-if (process.env.NODE_ENV === "production") {
-  app.use(
-    express.static(path.join(__dirname, "..", "src", "build"))
-  );
-
-  app.get("*", (req, res) => {
-    res.sendFile(
-      path.resolve(__dirname, "..", "src", "build", "index.html")
-    );
+if (process.env.NODE_ENV === 'production') {
+  const buildPath = path.join(__dirname, '..', 'build');
+  app.use(express.static(buildPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
   });
 }
 
-
-
 app.use((req, res) => {
-  console.log(`❌ Rota não encontrada: ${req.method} ${req.url}`);
-  res.status(404).json({ erro: "Rota não encontrada" });
+  res.status(404).json({ erro: 'Rota não encontrada' });
 });
 
-mongoose.connect(process.env.MONGO_URL)
-  .then(() => console.log("✅ Banco de Dados conectado!"))
-  .catch(err => console.error("❌ Erro ao conectar ao MongoDB:", err));
+const PORT = process.env.PORT || 3000;
 
+if (!process.env.MONGO_URL) {
+  console.error('❌ MONGO_URL não definido. Verifique o arquivo backend/.env');
+  process.exit(1);
+}
 
-app.listen(3000, () => {
-  console.log("🚀 Servidor rodando na porta 3000!");
-  console.log("🔍 Teste em: http://localhost:3000/test");
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => console.log('✅ Banco de dados conectado!'))
+  .catch((err) => console.error('❌ Erro ao conectar ao MongoDB:', err.message));
+
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor rodando na porta ${PORT}!`);
 });
-

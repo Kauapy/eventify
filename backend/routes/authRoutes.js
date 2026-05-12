@@ -1,79 +1,63 @@
-console.log("🔍 authRoutes carregado!");
 const express = require('express');
-const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const User = require('../models/User');
 
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
-  try{
+  try {
     const { nome, email, senha } = req.body;
 
-    console.log("📌 ADMIN_EMAIL do .env:", process.env.ADMIN_EMAIL);
-console.log("📨 E-mail usado no cadastro:", email);
-
-const role2 =
-      email.trim().toLowerCase() === process.env.ADMIN_EMAIL.trim().toLowerCase()
-        ? "admin"
-        : "user";
-
-    console.log("🔍 Role atribuída:", role2);
-
-
-    const usuarioExistente = await User.findOne({ email });
-
-    if (usuarioExistente) {
-      return res.status(400).json({ mensagem: "Email já cadastrado!" });
+    if (!nome || !email || !senha) {
+      return res.status(400).json({ mensagem: 'Nome, email e senha são obrigatórios.' });
     }
 
+    const usuarioExistente = await User.findOne({ email });
+    if (usuarioExistente) {
+      return res.status(400).json({ mensagem: 'Email já cadastrado!' });
+    }
+
+    const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+    const role = email.trim().toLowerCase() === adminEmail ? 'admin' : 'user';
+
     const senhaHash = await bcrypt.hash(senha, 10);
-
-    const role = email === process.env.ADMIN_EMAIL ? "admin" : "user";
-    
-    const novoUsuario = new User({ nome, email, senha: senhaHash });
-
+    const novoUsuario = new User({ nome, email, senha: senhaHash, role });
     await novoUsuario.save();
 
-    res.json({ mensagem: "Usuário registrado com sucesso!" });
-  }catch (error){
+    res.json({ mensagem: 'Usuário registrado com sucesso!' });
+  } catch (error) {
     res.status(500).json({
-      mensagem: "Erro ao registrar usuário",
-      error: error.message
-    })
+      mensagem: 'Erro ao registrar usuário',
+      error: error.message,
+    });
   }
 });
 
-
-router.post('/login', async  (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { email, senha } = req.body;
     const usuario = await User.findOne({ email });
 
     if (!usuario) {
-      return res.status(400).json({ mensagem: "Usuário não encontrado!" });
+      return res.status(400).json({ mensagem: 'Usuário não encontrado!' });
     }
 
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
     if (!senhaCorreta) {
-      return res.status(401).json({ mensagem: "Senha incorreta!" });
+      return res.status(401).json({ mensagem: 'Senha incorreta!' });
     }
-    
-    console.log(`Usuário logado: ${usuario.email} | Role: ${usuario.role}`);
 
     const token = jwt.sign(
       { id: usuario._id, role: usuario.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: '1h' }
     );
 
-    console.log(`🟢 Usuário logado: ${usuario.email} | Role: ${usuario.role}`);
-    res.json({ token, role: usuario.role});
-
+    res.json({ token, role: usuario.role, nome: usuario.nome });
   } catch (error) {
-    console.error("Erro no login:", error);
-    return res.status(500).json({ mensagem: "Erro interno do servidor" });
+    console.error('Erro no login:', error);
+    return res.status(500).json({ mensagem: 'Erro interno do servidor' });
   }
 });
 
