@@ -14,11 +14,35 @@
 }
 
 .titulo-admin {
-  color: var(--text-primary);
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(120deg, var(--text-primary) 0%, #c4b5fd 50%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   font-size: 2rem;
   margin: 0;
   font-weight: 800;
   letter-spacing: -0.5px;
+  padding-bottom: 0.35rem;
+}
+
+.titulo-admin::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 50%, transparent 100%);
+  transform-origin: left;
+  animation: barraEntra 0.6s ease-out both;
+}
+
+@keyframes barraEntra {
+  from { transform: scaleX(0); opacity: 0; }
+  to { transform: scaleX(1); opacity: 1; }
 }
 
 .subtitulo-admin {
@@ -29,6 +53,8 @@
 }
 
 .new-event {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
   color: #fff;
   border: none;
@@ -44,6 +70,30 @@
 .new-event:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px -8px rgba(99, 102, 241, 0.9);
+}
+
+.new-event::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+}
+
+.new-event:hover::after {
+  animation: brilho 0.7s ease-out;
+}
+
+@keyframes brilho {
+  to { left: 140%; }
 }
 
 .feedback {
@@ -83,8 +133,17 @@
   transition: color 0.2s ease;
 }
 
+.back-home .seta {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
 .back-home:hover {
   color: #c4b5fd;
+}
+
+.back-home:hover .seta {
+  transform: translateX(-4px);
 }
 
 @media (max-width: 600px) {
@@ -101,5 +160,12 @@
   }
   .titulo-admin {
     font-size: 1.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titulo-admin::after,
+  .new-event:hover::after {
+    animation: none;
   }
 }
