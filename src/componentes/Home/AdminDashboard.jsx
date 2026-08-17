@@ -156,7 +156,7 @@ function AdminDashboard({ eventos = [], carregando, erro, adicionarEvento, atual
         {renderLista()}
 
         <Link to="/home" className="back-home">
-          ← Voltar para Home
+          <span className="seta">←</span> Voltar para Home
         </Link>
       </section>
 
